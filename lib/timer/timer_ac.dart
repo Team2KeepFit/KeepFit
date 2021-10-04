@@ -33,13 +33,6 @@ class _timer_home_pageState extends State<timer_home_page> {
     });
   }
 
-  void bb (BuildContext context) {
-    Navigator.of(context).push (
-      MaterialPageRoute(
-        builder: (context) => HomePage(),
-        )
-    );
-  }
 
   void setset() {
     _Counter=int.parse(myController.text);
@@ -202,7 +195,7 @@ class _timer_home_pageState extends State<timer_home_page> {
         elevation: 2.0,
         leading: BackButton(
           color: Colors.white,
-          onPressed: () => bb(context),
+          onPressed: () => Navigator.of(context).pop(context),
         ),
       ),
 

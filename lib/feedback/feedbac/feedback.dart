@@ -11,6 +11,10 @@ class Feedbac extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         elevation: 2.0,
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: _buildContent(),
     );

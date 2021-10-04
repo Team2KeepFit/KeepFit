@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:keepfit/feedback/options/options.dart';
 import 'package:keepfit/planner.dart';
 import 'package:keepfit/search/search_main.dart';
-import 'package:keepfit/timer/timer_main.dart';
+import 'package:keepfit/timer/timer_ac.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -60,7 +60,7 @@ void fdbk(BuildContext context) {
 void timer(BuildContext context) {
   Navigator.of(context).push (
     MaterialPageRoute(
-      builder: (context) => Timer(),
+      builder: (context) => timer_home_page(),
       )
   );
 }

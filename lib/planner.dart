@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:keepfit/utilites/quiz.dart';
 import 'package:keepfit/utilites/result.dart';
-
+import 'package:keepfit/homepage.dart';
 /*void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
@@ -102,7 +102,7 @@ class _MyAppState extends State<Planner> {
           elevation: 2.0,
           leading: BackButton(
             color: Colors.white,
-            onPressed: () => {},
+            onPressed: () => Navigator.pop(context),
           ),
         ),
         body: Padding(
