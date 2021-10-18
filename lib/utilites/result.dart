@@ -13,6 +13,7 @@ void scheduledisp(BuildContext context, {required String para}) {
     builder: (context) => DisplaySchedule(para: para),
   ));
 }
+//animation
 class Result extends StatelessWidget {
   final List resultScore;
   final VoidCallback resetHandler;
