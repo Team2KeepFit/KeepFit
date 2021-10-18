@@ -19,15 +19,49 @@ class Quiz extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Question(
+        AnimatedSwitcher(duration: const Duration(milliseconds: 500),
+          child: Wrap(key: ValueKey<String>('${questions[questionIndex]["questionText"]}'),
+          children: [
+          Question(
           '${questions[questionIndex]["questionText"]}',
-        ), //Question
+          ), //Question ,
         ...(questions[questionIndex]['answers'] as List<Map<String, Object>>)
             .map((answer) {
           return Answer(() => answerQuestion(answer['score']), '${answer["text"]}');
-        }).toList()
+        }).toList()],
+          ),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            final inAnimation =
+            Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                .animate(animation);
+            final outAnimation =
+            Tween<Offset>(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0))
+                .animate(animation);
+
+            if (child.key == ValueKey('${questions[questionIndex]["questionText"]}')) {
+              return ClipRect(
+                child: SlideTransition(
+                  position: inAnimation,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: child,
+                  ),
+                ),
+              );
+            } else {
+              return ClipRect(
+                child: SlideTransition(
+                  position: outAnimation,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: child,
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       ],
     ); //Column
   }
 }
-

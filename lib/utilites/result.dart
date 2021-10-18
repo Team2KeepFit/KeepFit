@@ -1,60 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:keepfit/Planner/plan_disp.dart';
+import 'package:keepfit/Planner/schedule.dart';
 
+void plandisp(BuildContext context, {required String para}) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => DisplayPlan(para: para),
+  ));
+}
+
+void scheduledisp(BuildContext context, {required String para}) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => DisplaySchedule(para: para),
+  ));
+}
 class Result extends StatelessWidget {
   final List resultScore;
   final VoidCallback resetHandler;
-
-  Result(this.resultScore, this.resetHandler);
-
+  const Result(this.resultScore, this.resetHandler);
   //Remark Logic
   String get resultPhrase {
     String resultText;
-    if (resultScore[0]==1) {
+    if (resultScore[0] == 1) {
       resultText = 'Full Body Basic';
-      print(resultScore);
-    } else if (resultScore[1]==2) {
+    } else if (resultScore[1] == 2) {
       resultText = 'Bro Split';
-      print(resultScore);
-    } else if (resultScore[1]==0 && resultScore[2]==0) {
+    } else if (resultScore[1] == 0 && resultScore[2] == 0) {
       resultText = 'Full Body Basic';
-    } else if (resultScore[1]==0 && (resultScore[2]==1 || resultScore[2]==2)) {
+    } else if (resultScore[1] == 0 &&
+        (resultScore[2] == 1 || resultScore[2] == 2)) {
       resultText = 'Full Body Advanced';
-    } else if (resultScore[1]==1 && (resultScore[2]==1 || resultScore[2]==0)){
+    } else if (resultScore[1] == 1 &&
+        (resultScore[2] == 1 || resultScore[2] == 0)) {
       resultText = 'Upper - Lower Split';
-      print(resultScore);
-    }else if (resultScore[1]==1 && resultScore[2]==2) {
+    } else if (resultScore[1] == 1 && resultScore[2] == 2) {
       resultText = 'Full Body Advanced';
-      print(resultScore);
-    }else if(resultScore[1]==3 && resultScore[2]==0){
-      resultText='Bro Split Advanced';
-      print(resultScore);
-    }else{
-      resultText='Push-Pull-Leg Split';
-      print(resultScore);
+    } else if (resultScore[1] == 3 && resultScore[2] == 0) {
+      resultText = 'Bro Split Advanced';
+    } else {
+      resultText = 'Push-Pull-Leg Split';
     }
     return resultText;
   }
-
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            resultPhrase,
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ), //Text
-          FlatButton(
+          TextButton(
+            onPressed: ()=>{plandisp(context,para:resultPhrase)},
             child: Text(
-              'Restart Quiz!',
+              resultPhrase+'->',
+              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold,color:Colors.black),
+              textAlign: TextAlign.center,
+            ),
+          ), //Text
+          TextButton(
+            onPressed: ()=>{plandisp(context,para:resultPhrase)},
+            child: const Text(
+              'Schedule->',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold,color:Colors.black),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          TextButton(
+            child: const Text(
+                'Restart Quiz!',
+                style: TextStyle(color: Colors.blue)
             ), //Text
-            textColor: Colors.blue,
             onPressed: resetHandler,
           ), //FlatButton
         ], //<Widget>[]
       ), //Column
-    ); //Center
+    );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:keepfit/feedback/options/options.dart';
-import 'package:keepfit/planner.dart';
+import 'package:keepfit/Planner/planner.dart';
 import 'package:keepfit/search/search_main.dart';
 import 'package:keepfit/timer/timer_ac.dart';
 
