@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:keepfit/Planner/plan_disp.dart';
 import 'package:keepfit/Planner/schedule.dart';
@@ -14,10 +15,25 @@ void scheduledisp(BuildContext context, {required String para}) {
   ));
 }
 //animation
-class Result extends StatelessWidget {
+
+class Result extends StatefulWidget {
   final List resultScore;
   final VoidCallback resetHandler;
-  const Result(this.resultScore, this.resetHandler);
+  const Result(this.resultScore, this.resetHandler,{Key? key}) : super(key: key);
+
+  @override
+  _ResultState createState() => _ResultState();
+}
+
+class _ResultState extends State<Result> {
+  List get resultScore{
+    return widget.resultScore;
+  }
+  VoidCallback get resetHandler{
+    return widget.resetHandler;
+  }
+  var _schedule;
+
   //Remark Logic
   String get resultPhrase {
     String resultText;
@@ -41,6 +57,19 @@ class Result extends StatelessWidget {
       resultText = 'Push-Pull-Leg Split';
     }
     return resultText;
+  }
+  void Schedule()
+  {
+    CollectionReference collectionreference = FirebaseFirestore.instance.collection('Plans');
+    collectionreference.snapshots().listen((snapshot){
+      setState(() {
+        List Docux=snapshot.docs;
+        int p=Docux.indexOf(resultPhrase);
+        Map<String,dynamic> aller = Docux[p];
+        _schedule=aller['Schedule'];
+      });
+    });
+
   }
   @override
   Widget build(BuildContext context) {
