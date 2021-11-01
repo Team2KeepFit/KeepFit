@@ -11,7 +11,7 @@ class HomePage1 extends StatefulWidget {
 class _HomePage1State extends State<HomePage1> {
   static const historyLength = 5;
 
-  List<String> _searchHistory = [
+  final List<String> _searchHistory = [
     'Weight training',
     'Muscle groups',
     'Cardio',
@@ -193,7 +193,7 @@ class _HomePage1State extends State<HomePage1> {
         elevation: 2.0,
         leading: BackButton(
           color: Colors.white,
-          onPressed: () => bb(context),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
     );

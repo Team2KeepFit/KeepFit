@@ -1,72 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DisplaySchedule extends StatelessWidget {
-  final String para;
+  final Map<String,dynamic> para;
   const DisplaySchedule({required this.para, Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-        // <2> Pass `Future<QuerySnapshot>` to future
-        future: FirebaseFirestore.instance.collection('Plans').get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // <3> Retrieve `List<DocumentSnapshot>` from snapshot
-            final List<DocumentSnapshot> documents = snapshot.data!.docs;
-            return MaterialApp(
-              home: Scaffold(
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: const Text(
-                    'KeepFit',
-                    textAlign: TextAlign.center,
-                  ),
-                  elevation: 2.0,
-                  leading: BackButton(
-                    color: Colors.white,
-                    onPressed: () => Navigator.pop(context),
-                  ),
+  Widget build(BuildContext context)
+  {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'KeepFit',
+          textAlign: TextAlign.center,
+        ),
+        elevation: 2.0,
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: _buildContent(),
+    );
+  }
+
+  List<TableRow> Workout_Type()
+  {
+    List<TableRow> x=[];
+    List p=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    for (var i in p)
+    {
+      List<Widget> y=[];
+      y.add(
+          Container(
+            padding: const EdgeInsets.all(15.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.purple,
+                border: Border.all(
+                  color: Colors.black,
                 ),
-                body: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: ListView(
-                      children: documents
-                          .map((doc) => Card(
-                                child: ListTile(
-                                  title: const Text('Schedule'),
-                                  subtitle: Text(
-                                      doc[para]['Schedule']),
-                                ),
-                              ))
-                          .toList()),
-                ),
-              ),
-              debugShowCheckedModeBanner: false,
-            );
-          }
-          return MaterialApp(
-            home: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: const Text(
-                  'KeepFit',
-                  textAlign: TextAlign.center,
-                ),
-                elevation: 2.0,
-                leading: BackButton(
-                  color: Colors.white,
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ),
-              body: const Padding(
-                padding: EdgeInsets.all(30.0),
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
             ),
-            debugShowCheckedModeBanner: false,
-          );
-        });
+            child: Text(
+              i,
+              style: const TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 20),
+            ),
+          )
+      );
+      y.add(
+          Container(
+            padding: const EdgeInsets.all(15.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: const Color(0xFF786a36),
+                border: Border.all(
+                  color: Colors.white,
+                ),
+            ),
+            child: Text(
+              para[i],
+              style: const TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 20),
+            ),
+          )
+      );
+      x.add(TableRow(
+        children: y,
+      ));
+    }
+    return x;
+  }
+  Widget _buildContent()
+  {
+    return Center(
+      child: Table(
+        border: TableBorder.all(),
+        children: Workout_Type(),
+      ),
+    );
   }
 }
