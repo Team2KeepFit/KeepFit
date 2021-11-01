@@ -16,7 +16,7 @@ class _DisplayPlanState extends State<DisplayPlan>
   List<Map<String,dynamic>>? get para{
     return widget.para;
   }
-  late List<Table> tobescrolled;
+  List<Table> tobescrolled=[];
   Future<Map<String,List<Map<String,dynamic>>>> fetchdata() async
   {
     Map<String,List<Map<String,dynamic>>> p={};
@@ -62,44 +62,49 @@ class _DisplayPlanState extends State<DisplayPlan>
   }
   List<TableRow> tuplegiver(String x,Map<String,List<Map<String,dynamic>>> plans)
   {
+    final List<String> summa=["name","Previous Progression","Next Progression","Sets","Reps"];
     List<TableRow> p=[];
     List<Widget> texts=[];
     texts.add(
         const Text(
           "Name",
-          style: TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.w500,fontSize: 20),
+          style: TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.w500,fontSize: 13.65),
         ));
-    for (var i in plans[x]![0].keys)
+    for (var i in summa)
       {
         if(i!="name") {
+          print("Header ${i}");
           texts.add(
               Text(
                 i,
-                style: const TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.w500,fontSize: 20),
+                style: const TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.w500,fontSize: 13.65),
               ));
         }
       }
     p.add(TableRow(
         children: texts
     ));
-    texts.clear();
+    texts=[];
     for(int j=0;j<plans[x]!.length;j++)
     {
+      texts=[];
       texts.add(
           Text(
             plans[x]![j]["name"],
-            style: const TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.w500,fontSize: 16),
+            style: const TextStyle(color: Colors.white70,fontStyle: FontStyle.italic,fontWeight: FontWeight.w400,fontSize: 12),
           ));
-      for (var i in plans[x]![j].keys)
+      print(plans[x]![j]["name"]);
+      for (var i in summa)
       {
         if(i!="name")
         {
+          print("Data ${plans[x]![j][i]}");
           texts.add(
               Text(
                 (i != "Sets") ? (plans[x]![j][i]) : ("${plans[x]![j][i]}"),
                 style: const TextStyle(color: Colors.white70,
                     fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w400,
                     fontSize: 12),
               ));
         }
@@ -107,8 +112,8 @@ class _DisplayPlanState extends State<DisplayPlan>
       p.add(TableRow(
           children: texts
       ));
-      texts.clear();
     }
+    print("This is the no. of children inside each row: ${p.first.children!.length}");
     return p;
   }
   @override
@@ -148,10 +153,10 @@ class _DisplayPlanState extends State<DisplayPlan>
                 {
                   names.add(x);
                 }
+              print(tobescrolled.first.children.length);
               return ListView.separated(
                 scrollDirection: Axis.vertical,
                 itemCount: tobescrolled.length,
-                padding: const EdgeInsets.all(20.0),
                 itemBuilder: (BuildContext context, int index) {
                  return Center(
                    child: Column(
@@ -159,7 +164,7 @@ class _DisplayPlanState extends State<DisplayPlan>
                        Text(
                          names[index],
                          textAlign: TextAlign.center,
-                         style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w800,fontSize: 20),
+                         style: const TextStyle(color: Colors.white70,fontWeight: FontWeight.w900,fontSize: 20),
                        ),
                        tobescrolled[index],
                      ],

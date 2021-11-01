@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:keepfit/feedback/options/options.dart';
 import 'package:keepfit/Planner/planner.dart';
-import 'package:keepfit/search/search_main.dart';
+import 'package:keepfit/search/search.dart';
 import 'package:keepfit/timer/timer_ac.dart';
 
 class HomePage extends StatelessWidget {
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
 void exsearch(BuildContext context) {
   Navigator.of(context).push (
     MaterialPageRoute(
-      builder: (context) => Search_Main(),
+      builder: (context) => HomePage1(),
       )
   );
 }

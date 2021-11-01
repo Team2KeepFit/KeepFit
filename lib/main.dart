@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       //home: Feedbac(),
       //home: SignInPage(),
       home: HomePage(),
+      debugShowCheckedModeBanner: false,
       //home: Issue(),
       //home: Exercise(),
     );

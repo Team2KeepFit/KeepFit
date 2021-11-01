@@ -73,14 +73,6 @@ class _HomePage1State extends State<HomePage1> {
     super.dispose();
   }
 
-  void bb (BuildContext context) {
-    Navigator.of(context).push (
-      MaterialPageRoute(
-        builder: (context) => HomePage(),
-        )
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
