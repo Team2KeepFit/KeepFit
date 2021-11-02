@@ -11,14 +11,17 @@ class SignInPage extends StatelessWidget {
     try {
       final userCredentials = await FirebaseAuth.instance.signInAnonymously();
       print('${userCredentials.user!.uid}');
-      Navigator.of(context).push (
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          )
-      );
     }catch(e){
       print(e.toString());
     }
+  }
+
+  void next_page(BuildContext context) {
+    Navigator.of(context).push (
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          )
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -27,12 +30,12 @@ class SignInPage extends StatelessWidget {
         title: Text('Keep Fit'),
         elevation: 2.0,
       ),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -81,7 +84,10 @@ class SignInPage extends StatelessWidget {
             text: 'Go anonymous',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: () => _signInAnonymously,
+            onPressed: () => {
+              _signInAnonymously,
+              next_page(context),
+            },
           ),
         ],
       ),

@@ -1,13 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:keepfit/homepage.dart';
 import 'app/sign_in/sign_in_page.dart';
 import 'feedback/options/options.dart';
 
 //void main() async {
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() {
+  //WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -23,7 +22,6 @@ class MyApp extends StatelessWidget {
       //home: Feedbac(),
       //home: SignInPage(),
       home: HomePage(),
-      debugShowCheckedModeBanner: false,
       //home: Issue(),
       //home: Exercise(),
     );
