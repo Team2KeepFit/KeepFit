@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
 void exsearch(BuildContext context) {
   Navigator.of(context).push (
     MaterialPageRoute(
-      builder: (context) => HomePage1(),
+      builder: (context) => Search(),
       )
   );
 }
