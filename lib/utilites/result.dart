@@ -4,8 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:keepfit/Planner/plan_disp.dart';
 import 'package:keepfit/Planner/schedule.dart';
 
-void plandisp(BuildContext context,
-    {required List<Map<String, dynamic>> para}) {
+void plandisp(BuildContext context, {required List<Map<String, dynamic>> para}) {
   Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => DisplayPlan(para: para),
   ));

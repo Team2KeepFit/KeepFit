@@ -158,8 +158,11 @@ class _DisplayPlanState extends State<DisplayPlan>
                 scrollDirection: Axis.vertical,
                 itemCount: tobescrolled.length,
                 itemBuilder: (BuildContext context, int index) {
-                 return Center(
+                 return Container(
+                   alignment: Alignment.center,
+                   height: 500,
                    child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
                      children: [
                        Text(
                          names[index],

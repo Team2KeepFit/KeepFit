@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:keepfit/search/search_result.dart';
 
 class Search extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,43 +27,195 @@ class Search extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomepageState createState() => _MyHomepageState();
 }
+
 class _MyHomepageState extends State<MyHomePage> {
-
-
-  void search_data(String value,AsyncSnapshot snapshot)
+  bool _flag = false;
+  Column noresult = Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        'No results Found!',
+        textAlign: TextAlign.center,
+        style: GoogleFonts.arimo(
+            textStyle: const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.w200, fontSize: 30)
+        ),
+      ),
+    ],
+  );
+  Column result=Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        'No results Found!',
+        textAlign: TextAlign.center,
+        style: GoogleFonts.arimo(
+            textStyle: const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.w200, fontSize: 30)
+        ),
+      ),
+    ],
+  );
+  void detailer(BuildContext context, Map<String,dynamic> details, String name)
   {
-    var x=snapshot.data!.docs;
-    print("${x.runtimeType}");
+    setState(() {
+      _flag=false;
+      result=noresult;
+    });
+    nextPage(context,details,name);
   }
-  @override
-  Widget build(BuildContext context) {
-    return  FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection("Search").get(),
-      builder:(context,snapshot){
-        return ListView(
-          children: [
-            Container(
-              child: TextFormField(
-                onChanged: (value){
-                  search_data(value,snapshot);
-                },
-                decoration: const InputDecoration(
-                    hintText: "Search",
-                    suffixIcon: Icon(Icons.search)
-                ),
+  void documentexpander(BuildContext context,DocumentSnapshot docx)
+  {
+    List<TextButton> exercise_buttons=[];
+    Map<String,dynamic> exercises=docx.data() as Map<String,dynamic>;
+    for(String name in exercises.keys)
+      {
+        exercise_buttons.add(
+          TextButton(
+            onPressed: ()=>detailer(context,exercises[name],name),
+            child: Text(
+              name,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.arimo(
+                  textStyle: const TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w300,)
               ),
             ),
-          ],
+          )
         );
       }
-    );
+    setState(() {
+      result=Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: exercise_buttons,
+      );
+    });
+  }
+  void search_data(BuildContext context, String value, List<QueryDocumentSnapshot> documentlist) {
+    setState(() {
+      _flag=false;
+    });
+    if (value == "") {
+      setState(() {
+        _flag=false;
+      });
+      return;
+    }
+    List<Widget> textbuttons = [];
+    for (int i = 0; i < documentlist.length; i++) {
+      if (documentlist[i].id.contains(value)) {
+        if(_flag==false)
+          {
+            setState(() {
+              _flag=true;
+            });
+          }
+        textbuttons.add(
+          TextButton(
+            onPressed: ()=>documentexpander(context,documentlist[i]),
+            child: Text(documentlist[i].id,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.arimo(
+                  textStyle: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w300,),
+              ),
+            ), //Text
+          ),
+        );
+      }
+      for(int i=0;i< documentlist.length;i++)
+        {
+          Map<String,dynamic> exercises=documentlist[i].data() as Map<String,dynamic>;
+          for(String name in exercises.keys)
+            {
+              if(_flag==false)
+                {
+                  setState(() {
+                    _flag=true;
+                  });
+                }
+              if(name.contains(value))
+                {
+                  textbuttons.add(
+                      TextButton(
+                        onPressed: ()=>detailer(context,exercises[name],name),
+                        child: Text(
+                          name,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.arimo(
+                              textStyle: const TextStyle(
+                                color: Colors.black, fontWeight: FontWeight.w300,)
+                          ),
+                        ),
+                      )
+                  );
+                }
+            }
+        }
+    }
+    if(_flag==false) {
+      setState(() {
+        result=noresult;
+      });
+    }
+    setState(() {
+      result=Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: textbuttons,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<QuerySnapshot>(
+        future: FirebaseFirestore.instance.collection("Search").get(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Error in fetching Data!!",
+                  style: TextStyle(height: 5, fontSize: 10)),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.black,
+            ));
+          }
+          var documentlist = snapshot.data!.docs;
+          return ListView(
+            children: [
+              Container(
+                child: TextFormField(
+                  onChanged: (value) {
+                    search_data(context,value, documentlist);
+                  },
+                  decoration: const InputDecoration(
+                      hintText: "Search", suffixIcon: Icon(Icons.search)),
+                ),
+              ),
+              (_flag==false)?(
+              Container(
+                height: 500.0,
+                alignment: Alignment.center,
+                child: result,
+              )):(result),
+            ],
+          );
+        });
+  }
+
+  void nextPage(context, Map<String, dynamic> details, String name)
+  {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SearchResult(details:details,name:name),
+    ));
   }
 }
-
-
