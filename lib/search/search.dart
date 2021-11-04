@@ -21,7 +21,24 @@ class Search extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: MyHomePage(),
+        body: FutureBuilder<QuerySnapshot>(
+          future: FirebaseFirestore.instance.collection("Search").get(),
+          builder: (context,snapshot) {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Error in fetching Data!!",
+                    style: TextStyle(height: 5, fontSize: 10)),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                  ));
+            }
+            var documentlist = snapshot.data!.docs;
+            return MyHomePage(documentlist);
+          }
+        ),
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -29,13 +46,16 @@ class Search extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
+  var documentlist;
+  MyHomePage(this.documentlist,{Key? key}) : super(key: key);
   @override
   _MyHomepageState createState() => _MyHomepageState();
 }
 
 class _MyHomepageState extends State<MyHomePage> {
+  List<DocumentSnapshot> get documentlist{
+    return widget.documentlist;
+}
   bool _flag = false;
   Column noresult = Column(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -98,9 +118,10 @@ class _MyHomepageState extends State<MyHomePage> {
       );
     });
   }
-  void search_data(BuildContext context, String value, List<QueryDocumentSnapshot> documentlist) {
+  void search_data(BuildContext context, String value) {
     setState(() {
       _flag=false;
+      result=noresult;
     });
     if (value == "") {
       setState(() {
@@ -110,7 +131,7 @@ class _MyHomepageState extends State<MyHomePage> {
     }
     List<Widget> textbuttons = [];
     for (int i = 0; i < documentlist.length; i++) {
-      if (documentlist[i].id.contains(value)) {
+      if (documentlist[i].id.toLowerCase().startsWith(value)) {
         if(_flag==false)
           {
             setState(() {
@@ -141,7 +162,7 @@ class _MyHomepageState extends State<MyHomePage> {
                     _flag=true;
                   });
                 }
-              if(name.contains(value))
+              if(name.toLowerCase().startsWith(value))
                 {
                   textbuttons.add(
                       TextButton(
@@ -175,41 +196,25 @@ class _MyHomepageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection("Search").get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text("Error in fetching Data!!",
-                  style: TextStyle(height: 5, fontSize: 10)),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: Colors.black,
-            ));
-          }
-          var documentlist = snapshot.data!.docs;
-          return ListView(
-            children: [
-              Container(
-                child: TextFormField(
-                  onChanged: (value) {
-                    search_data(context,value, documentlist);
-                  },
-                  decoration: const InputDecoration(
-                      hintText: "Search", suffixIcon: Icon(Icons.search)),
-                ),
-              ),
-              (_flag==false)?(
-              Container(
-                height: 500.0,
-                alignment: Alignment.center,
-                child: result,
-              )):(result),
-            ],
-          );
-        });
+    return ListView(
+      children: [
+        Container(
+          child: TextFormField(
+            onChanged: (value) {
+              search_data(context,value);
+            },
+            decoration: const InputDecoration(
+                hintText: "Search", suffixIcon: Icon(Icons.search)),
+          ),
+        ),
+        (_flag==false)?(
+            Container(
+              height: 500.0,
+              alignment: Alignment.center,
+              child: result,
+            )):(result),
+      ],
+    );
   }
 
   void nextPage(context, Map<String, dynamic> details, String name)
